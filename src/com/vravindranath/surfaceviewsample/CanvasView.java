@@ -14,7 +14,7 @@ import android.view.SurfaceView;
 
 public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
-	private static final float STROKE_WIDTH = 2;
+	private static final float STROKE_WIDTH = 8;
 
 	private UIThread uiThread;
 
@@ -27,7 +27,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private float mX;
 	private float mY;
-	private float TOUCH_TOLERANCE = 4;
+	private float TOUCH_TOLERANCE = 8;
 
 	private RectF dirtyRect;
 
@@ -56,10 +56,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	protected void onDraw(Canvas canvas) {
 		setPaintProperties();
 
-		Paint rectPaint =  new Paint(mPaint);
-		rectPaint.setColor(Color.RED);
-		rectPaint.setStyle(Paint.Style.FILL);
-
 		if (canvas != null) {
 			canvas.drawColor(Color.WHITE);
 			synchronized (objectsToDraw) {
@@ -77,8 +73,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private void setPaintProperties() {
 		mPaint = new Paint();
 		mPaint.setAntiAlias(true);
+		mPaint.setAntiAlias(true);
 		mPaint.setDither(true);
-		mPaint.setColor(Color.BLACK);
+		mPaint.setColor(Color.RED);
 		mPaint.setStyle(Paint.Style.STROKE);
 		mPaint.setStrokeJoin(Paint.Join.ROUND);
 		mPaint.setStrokeCap(Paint.Cap.ROUND);

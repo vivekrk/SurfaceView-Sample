@@ -13,6 +13,10 @@ public class UIThread extends Thread {
 		this.canvasView = canvasView;
 		surfaceHolder = canvasView.getHolder();
 	}
+	
+	public boolean isThreadRunning() {
+		return toRun;
+	}
 
 	public void setRunning(boolean run) {
 		toRun = run;

@@ -71,6 +71,11 @@ public class SurfaceViewSampleActivity extends Activity implements OnCheckedChan
 			view.setDrawingMode(Constants.RECT_DRAWING);
 			Toast.makeText(getApplicationContext(), "Not implemented", Toast.LENGTH_SHORT).show();
 			break;
+			
+		case R.id.select:
+			view.setDrawingMode(Constants.SELECT);
+			Toast.makeText(getApplicationContext(), "Not implemented", Toast.LENGTH_SHORT).show();
+			break;
 
 		default:
 			break;

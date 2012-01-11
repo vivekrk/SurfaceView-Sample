@@ -18,6 +18,13 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
+            android:id="@+id/select"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select" />
+        
+        <RadioButton
             android:id="@+id/free_drawing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,7 +44,7 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Rectangle" />
+            android:text="Rect" />
     </RadioGroup>
 
 </LinearLayout>

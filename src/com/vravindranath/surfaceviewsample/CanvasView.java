@@ -28,6 +28,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private float mX;
 	private float mY;
 	private float TOUCH_TOLERANCE = 8;
+	
+	private TempLine templine;
 
 	private RectF dirtyRect;
 
@@ -40,7 +42,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		getHolder().addCallback(this);
 		
 		objectsToDraw = new ArrayList<DrawableObject>();
-
+		
 		mPath = new Path();
 	}
 
@@ -62,6 +64,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				for (DrawableObject drawableObject : objectsToDraw) {
 					drawableObject.draw(canvas);
 				}
+			}
+			
+			if (templine != null) {
+				templine.draw(canvas);
 			}
 		}
 	}
@@ -95,15 +101,22 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		
 		switch (mMode) {
 		case Constants.FREE_DRAWING:
-			drawableObject = new FreeDrawing(mPath, mPaint);
+			if(drawableObject == null) {
+				drawableObject = new FreeDrawing(mPath, mPaint);
+			}
 			break;
 			
 		case Constants.LINE_DRAWING:
-			drawableObject = new LineDrawing(mPath, mPaint);
+			if(drawableObject == null) {
+				drawableObject = new LineDrawing(mPath, mPaint);
+				templine = new TempLine(mPaint);
+			}
 			break;
 			
 		case Constants.RECT_DRAWING:
-			drawableObject = new RectDrawing(mPath, mPaint);
+			if(drawableObject == null) {
+				drawableObject = new RectDrawing(mPath, mPaint);
+			}
 			break;
 
 		default:
@@ -118,6 +131,16 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			mPath.moveTo(x, y);
 			mX = x;
 			mY = y;
+			
+			switch (mMode) {
+			case Constants.LINE_DRAWING:
+				drawableObject.addControlPoint(x, y);
+				templine.setStartPoint(x, y);
+				
+//				Log.d("TEST", "ACTION_DOWN: (" + x + "," + y + ")");
+				break;
+			}
+			
 			break;
 
 		case MotionEvent.ACTION_MOVE:
@@ -133,6 +156,14 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 					mY = y;
 				}
 				break;
+				
+			case Constants.LINE_DRAWING:
+//				TODO: The line needs to be continuously drawn when moved.
+				templine.setEndPoint(x, y);
+				templine.setShouldDrawLine(true);
+				
+//				Log.d("TEST", "ACTION_MOVE: (" + x + "," + y + ")");
+				break;
 			}
 			break;
 
@@ -140,6 +171,17 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			switch (mMode) {
 			case Constants.FREE_DRAWING:
 				mPath.moveTo(x, y);
+				drawableObject = null;
+				break;
+				
+			case Constants.LINE_DRAWING:
+				drawableObject.addControlPoint(x, y);
+				
+//				Log.d("TEST", "ACTION_UP: (" + x + "," + y + ")");
+				
+				templine.setShouldDrawLine(false);
+				templine.resetLine();
+				drawableObject = null;
 				break;
 			}
 			break;

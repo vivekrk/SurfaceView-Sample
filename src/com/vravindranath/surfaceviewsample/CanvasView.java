@@ -47,6 +47,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void clearCanvas() {
+		mPath.reset();
 		synchronized (objectsToDraw) {
 			objectsToDraw.clear();
 		}

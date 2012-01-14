@@ -13,6 +13,12 @@ public class LineDrawing extends DrawableObject {
 	private ArrayList<PointF> controlPoints;
 	private Path mPath;
 	private Paint mPaint;
+	
+	private boolean isSelected = false;
+	
+	public void setSelected(boolean isSelected) {
+		isSelected = true;
+	}
 
 	public LineDrawing(Path path, Paint paint) {
 		mPath = path;
@@ -24,7 +30,9 @@ public class LineDrawing extends DrawableObject {
 	@Override
 	public void draw(Canvas canvas) {
 		canvas.drawPath(mPath, mPaint);
-		drawControlPoints(canvas);
+		if (isSelected) {
+			drawControlPoints(canvas);
+		}
 	}
 	
 	@Override

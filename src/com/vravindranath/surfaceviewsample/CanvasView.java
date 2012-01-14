@@ -37,6 +37,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private int mMode = Constants.FREE_DRAWING;
 	
 	private ArrayList<DrawableObject> objectsToDraw;
+
+	private float lineStartX = 0;
+	private float lineStartY = 0;
 	
 	public CanvasView(Context context) {
 		super(context);
@@ -122,13 +125,16 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				break;
 				
 			case Constants.LINE_DRAWING:
+				lineStartX = x;
+				lineStartY = y;
 				movePathTo(x, y);
 				if(drawableObject == null) {
 					drawableObject = new LineDrawing(mPath, mPaint);
 					templine = new TempLine(mPaint);
+					drawableObject.addControlPoint(x, y);
+					templine.setStartPoint(x, y);
 				}
-				drawableObject.addControlPoint(x, y);
-				templine.setStartPoint(x, y);
+				
 //				Log.d("TEST", "ACTION_DOWN: (" + x + "," + y + ")");
 				break;
 				
@@ -173,7 +179,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				break;
 				
 			case Constants.LINE_DRAWING:
-				if (drawableObject.isStartPointEqualTo(x, y)) {
+				if (x == lineStartX && y == lineStartY) {
 					drawableObject.removeLastPoint();
 				} else {
 					drawableObject.addControlPoint(x, y);
@@ -182,8 +188,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 //				Log.d("TEST", "ACTION_UP: (" + x + "," + y + ")");
 				
 				templine.setShouldDrawLine(false);
-				templine.resetLine();
-				drawableObject = null;
+//				templine.resetLine();
+//				drawableObject = null;
+				templine.setStartPoint(x, y);
 				break;
 			}
 			break;

@@ -31,7 +31,7 @@ public class LineDrawing extends DrawableObject {
 	public void draw(Canvas canvas) {
 		canvas.drawPath(mPath, mPaint);
 		if (isSelected) {
-			drawControlPoints(canvas);
+			drawSelection(canvas);
 		}
 	}
 	
@@ -48,19 +48,19 @@ public class LineDrawing extends DrawableObject {
 	@Override
 	public void addControlPoint(float x, float y) {
 		super.addControlPoint(x, y);
-		controlPoints.add(new PointF(x, y));
+		synchronized (controlPoints) {
+			controlPoints.add(new PointF(x, y));
+		}
 		mPath.lineTo(x, y);
 	}
 	
-	private void drawControlPoints(Canvas canvas) {
-		for (PointF controlPoint : controlPoints) {
-			canvas.drawCircle(controlPoint.x, controlPoint.y, CONTROL_POINT_RADIUS, mPaint);
-		}
-	}
-
 	@Override
 	public void drawSelection(Canvas canvas) {
-		// TODO Auto-generated method stub
-		
+		synchronized (controlPoints) {
+			for (PointF controlPoint : controlPoints) {
+				canvas.drawCircle(controlPoint.x, controlPoint.y,
+						CONTROL_POINT_RADIUS, mPaint);
+			}
+		}
 	}
 }

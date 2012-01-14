@@ -9,6 +9,7 @@ import android.graphics.PointF;
 
 public class LineDrawing extends DrawableObject {
 
+	private static final float CONTROL_POINT_RADIUS = 8;
 	private ArrayList<PointF> controlPoints;
 	private Path mPath;
 	private Paint mPaint;
@@ -23,11 +24,19 @@ public class LineDrawing extends DrawableObject {
 	@Override
 	public void draw(Canvas canvas) {
 		canvas.drawPath(mPath, mPaint);
+		drawControlPoints(canvas);
 	}
 	
 	@Override
 	public void addControlPoint(float x, float y) {
 		super.addControlPoint(x, y);
 		controlPoints.add(new PointF(x, y));
+		mPath.lineTo(x, y);
+	}
+	
+	private void drawControlPoints(Canvas canvas) {
+		for (PointF controlPoint : controlPoints) {
+			canvas.drawCircle(controlPoint.x, controlPoint.y, CONTROL_POINT_RADIUS, mPaint);
+		}
 	}
 }

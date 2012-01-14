@@ -21,7 +21,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private Path mPath;
 	private Paint mPaint;
 
-	private Path oldPath;
+	private ArrayList<DrawableObject> oldObjectedToDraw;
 	
 	private DrawableObject drawableObject = null;
 
@@ -47,7 +47,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void clearCanvas() {
-		mPath.reset();
+		synchronized (objectsToDraw) {
+			objectsToDraw.clear();
+		}
 	}
 	
 	public void setDrawingMode(int drawingMode) {
@@ -91,7 +93,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-		oldPath = mPath;
+		oldObjectedToDraw = objectsToDraw;
 	}
 
 	@Override
@@ -197,7 +199,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void restoreOldPath() {
-		mPath = oldPath;
+		objectsToDraw = oldObjectedToDraw;
 	}
 
 	@Override

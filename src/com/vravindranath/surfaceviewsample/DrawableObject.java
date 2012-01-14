@@ -10,4 +10,14 @@ public abstract class DrawableObject {
 		
 	}
 	
+	abstract public void drawSelection(Canvas canvas);
+	
+	public boolean isStartPointEqualTo(float x, float y) {
+		return false;
+	}
+	
+	public void removeLastPoint() {
+		
+	}
+	
 }

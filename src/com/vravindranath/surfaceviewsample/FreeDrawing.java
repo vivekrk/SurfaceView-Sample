@@ -18,4 +18,10 @@ public class FreeDrawing extends DrawableObject {
 	public void draw(Canvas canvas) {
 		canvas.drawPath(mPath, mPaint);
 	}
+
+	@Override
+	public void drawSelection(Canvas canvas) {
+		// TODO Auto-generated method stub
+		
+	}
 }

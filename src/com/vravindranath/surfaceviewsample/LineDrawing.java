@@ -14,7 +14,7 @@ public class LineDrawing extends DrawableObject {
 	private Path mPath;
 	private Paint mPaint;
 	
-	private boolean isSelected = false;
+	private boolean isSelected = true;
 	
 	public void setSelected(boolean isSelected) {
 		isSelected = true;
@@ -35,6 +35,16 @@ public class LineDrawing extends DrawableObject {
 		}
 	}
 	
+	public boolean isStartPointEqualTo(float x, float y) {
+		return controlPoints.get(controlPoints.size() - 1).equals(x, y);
+	}
+	
+	public void removeLastPoint() {
+		synchronized (controlPoints) {
+			controlPoints.remove(controlPoints.size() - 1);
+		}
+	}
+	
 	@Override
 	public void addControlPoint(float x, float y) {
 		super.addControlPoint(x, y);
@@ -46,5 +56,11 @@ public class LineDrawing extends DrawableObject {
 		for (PointF controlPoint : controlPoints) {
 			canvas.drawCircle(controlPoint.x, controlPoint.y, CONTROL_POINT_RADIUS, mPaint);
 		}
+	}
+
+	@Override
+	public void drawSelection(Canvas canvas) {
+		// TODO Auto-generated method stub
+		
 	}
 }

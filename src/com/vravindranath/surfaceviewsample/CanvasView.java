@@ -11,6 +11,7 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -102,48 +103,43 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		float x = event.getX();
 		float y = event.getY();
 		
-		switch (mMode) {
-		case Constants.FREE_DRAWING:
-			if(drawableObject == null) {
-				drawableObject = new FreeDrawing(mPath, mPaint);
-			}
-			break;
-			
-		case Constants.LINE_DRAWING:
-			if(drawableObject == null) {
-				drawableObject = new LineDrawing(mPath, mPaint);
-				templine = new TempLine(mPaint);
-			}
-			break;
-			
-		case Constants.RECT_DRAWING:
-			if(drawableObject == null) {
-				drawableObject = new RectDrawing(mPath, mPaint);
-			}
-			break;
-
-		default:
-			break;
-		}
-		
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			synchronized (objectsToDraw) {
-				objectsToDraw.add(drawableObject);
-			}
-			mPath.moveTo(x, y);
-			mX = x;
-			mY = y;
-			
 			switch (mMode) {
+			case Constants.SELECT:
+				drawableObject = getSelectedObject();
+				if(drawableObject == null) {
+					Toast.makeText(getContext(), "NO OBJECT SELECTED", Toast.LENGTH_SHORT).show();
+				}
+				break;
+				
+			case Constants.FREE_DRAWING:
+				movePathTo(x, y);
+				if(drawableObject == null) {
+					drawableObject = new FreeDrawing(mPath, mPaint);
+				}
+				
+				break;
+				
 			case Constants.LINE_DRAWING:
+				movePathTo(x, y);
+				if(drawableObject == null) {
+					drawableObject = new LineDrawing(mPath, mPaint);
+					templine = new TempLine(mPaint);
+				}
 				drawableObject.addControlPoint(x, y);
 				templine.setStartPoint(x, y);
-				
 //				Log.d("TEST", "ACTION_DOWN: (" + x + "," + y + ")");
 				break;
+				
+			case Constants.RECT_DRAWING:
+				movePathTo(x, y);
+				if(drawableObject == null) {
+					drawableObject = new RectDrawing(mPath, mPaint);
+				}
+				break;
 			}
-			
+			addObjectToDraw(drawableObject);
 			break;
 
 		case MotionEvent.ACTION_MOVE:
@@ -161,7 +157,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				break;
 				
 			case Constants.LINE_DRAWING:
-//				TODO: The line needs to be continuously drawn when moved.
 				templine.setEndPoint(x, y);
 				templine.setShouldDrawLine(true);
 				
@@ -178,7 +173,11 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				break;
 				
 			case Constants.LINE_DRAWING:
-				drawableObject.addControlPoint(x, y);
+				if (drawableObject.isStartPointEqualTo(x, y)) {
+					drawableObject.removeLastPoint();
+				} else {
+					drawableObject.addControlPoint(x, y);
+				}
 				
 //				Log.d("TEST", "ACTION_UP: (" + x + "," + y + ")");
 				
@@ -190,6 +189,25 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			break;
 		}
 		return true;
+	}
+
+	private void addObjectToDraw(DrawableObject drawableObject) {
+		if (drawableObject != null) {
+			synchronized (objectsToDraw) {
+				objectsToDraw.add(drawableObject);
+			}
+		}
+	}
+	
+	private void movePathTo(float x, float y) {
+		mPath.moveTo(x, y);
+		mX = x;
+		mY = y;
+	}
+
+	private DrawableObject getSelectedObject() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

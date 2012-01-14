@@ -35,10 +35,6 @@ public class LineDrawing extends DrawableObject {
 		}
 	}
 	
-	public boolean isStartPointEqualTo(float x, float y) {
-		return controlPoints.get(controlPoints.size() - 1).equals(x, y);
-	}
-	
 	public void removeLastPoint() {
 		synchronized (controlPoints) {
 			controlPoints.remove(controlPoints.size() - 1);

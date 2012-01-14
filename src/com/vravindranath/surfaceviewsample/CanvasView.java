@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -38,9 +39,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	
 	private ArrayList<DrawableObject> objectsToDraw;
 
-	private float lineStartX = 0;
-	private float lineStartY = 0;
-	
 	public CanvasView(Context context) {
 		super(context);
 		getHolder().addCallback(this);
@@ -55,6 +53,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		synchronized (objectsToDraw) {
 			objectsToDraw.clear();
 		}
+		drawableObject = null;
+		Log.d("TEST", "clearCanvas :" + objectsToDraw.size());
 	}
 	
 	public void setDrawingMode(int drawingMode) {
@@ -106,6 +106,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		float x = event.getX();
 		float y = event.getY();
 		
+		Log.d("TEST", "onTouchEvent :" + objectsToDraw.size());
+		
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			switch (mMode) {
@@ -125,10 +127,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				break;
 				
 			case Constants.LINE_DRAWING:
-				lineStartX = x;
-				lineStartY = y;
-				movePathTo(x, y);
 				if(drawableObject == null) {
+					movePathTo(x, y);
 					drawableObject = new LineDrawing(mPath, mPaint);
 					templine = new TempLine(mPaint);
 					drawableObject.addControlPoint(x, y);
@@ -179,11 +179,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				break;
 				
 			case Constants.LINE_DRAWING:
-				if (x == lineStartX && y == lineStartY) {
-					drawableObject.removeLastPoint();
-				} else {
-					drawableObject.addControlPoint(x, y);
-				}
+				drawableObject.addControlPoint(x, y);
 				
 //				Log.d("TEST", "ACTION_UP: (" + x + "," + y + ")");
 				

@@ -15,5 +15,4 @@ public abstract class DrawableObject {
 	public void removeLastPoint() {
 		
 	}
-	
 }

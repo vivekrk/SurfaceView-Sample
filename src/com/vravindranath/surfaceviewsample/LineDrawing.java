@@ -50,6 +50,8 @@ public class LineDrawing extends DrawableObject {
 		mPath.lineTo(x, y);
 	}
 	
+	
+	
 	@Override
 	public void drawSelection(Canvas canvas) {
 		synchronized (controlPoints) {

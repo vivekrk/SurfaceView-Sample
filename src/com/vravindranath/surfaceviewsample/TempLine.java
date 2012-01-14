@@ -2,7 +2,6 @@ package com.vravindranath.surfaceviewsample;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 
 public class TempLine {
 	private float startX;
@@ -17,14 +16,14 @@ public class TempLine {
 	public void setStartPoint(float x, float y) {
 		startX = x;
 		startY = y;
-		Log.d("TEST", "setStartPoint: (" + startX + "," + startY + ")");
+//		Log.d("TEST", "setStartPoint: (" + startX + "," + startY + ")");
 	}
 
 	public void setEndPoint(float x, float y) {
 		stopX = x;
 		stopY = y;
 		
-		Log.d("TEST", "setEndPoint: (" + x + "," + y + ")");
+//		Log.d("TEST", "setEndPoint: (" + x + "," + y + ")");
 	}
 
 	public TempLine(Paint paint) {
@@ -34,8 +33,8 @@ public class TempLine {
 	public void draw(Canvas canvas) {
 		if (shouldDrawline) {
 			canvas.drawLine(startX, startY, stopX, stopY, mPaint);
-			Log.d("TEST", "draw: (startX, startY): (" + startX + "," + startY + ")" + 
-					"(stopX, stopY): (" + stopX + "," + stopY + ")");
+//			Log.d("TEST", "draw: (startX, startY): (" + startX + "," + startY + ")" + 
+//					"(stopX, stopY): (" + stopX + "," + stopY + ")");
 		}
 	}
 	
@@ -51,7 +50,7 @@ public class TempLine {
 		stopY = -1;
 		mPaint = null;
 		
-		Log.d("TEST", "resetLine: (startX, startY): (" + startX + "," + startY + ")" + 
-		"(stopX, stopY): (" + stopX + "," + stopY + ")");
+//		Log.d("TEST", "resetLine: (startX, startY): (" + startX + "," + startY + ")" + 
+//		"(stopX, stopY): (" + stopX + "," + stopY + ")");
 	}
 }

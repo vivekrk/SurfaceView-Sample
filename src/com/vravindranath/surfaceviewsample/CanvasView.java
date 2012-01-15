@@ -18,43 +18,43 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private static final float STROKE_WIDTH = 8;
 
-	private UIThread uiThread;
+	private UIThread mUIThread;
 
 	private Path mPath;
 	private Paint mPaint;
 
-	private ArrayList<DrawableObject> oldObjectedToDraw;
+	private ArrayList<DrawableObject> mOldObjectedToDraw;
 	
-	private DrawableObject drawableObject = null;
+	private DrawableObject mDrawableObject = null;
 
 	private float mX;
 	private float mY;
 	private float TOUCH_TOLERANCE = 8;
 	
-	private TempLine templine;
+	private TempLine mTempline;
 
-	private RectF dirtyRect;
+	private RectF mDirtyRect;
 
 	private int mMode = Constants.FREE_DRAWING;
 	
-	private ArrayList<DrawableObject> objectsToDraw;
+	private ArrayList<DrawableObject> mObjectsToDraw;
 
 	public CanvasView(Context context) {
 		super(context);
 		getHolder().addCallback(this);
 		
-		objectsToDraw = new ArrayList<DrawableObject>();
+		mObjectsToDraw = new ArrayList<DrawableObject>();
 		
 		mPath = new Path();
 	}
 
 	public void clearCanvas() {
 		mPath.reset();
-		synchronized (objectsToDraw) {
-			objectsToDraw.clear();
+		synchronized (mObjectsToDraw) {
+			mObjectsToDraw.clear();
 		}
-		drawableObject = null;
-		Log.d("TEST", "clearCanvas :" + objectsToDraw.size());
+		mDrawableObject = null;
+		Log.d("TEST", "clearCanvas :" + mObjectsToDraw.size());
 	}
 	
 	public void setDrawingMode(int drawingMode) {
@@ -67,25 +67,24 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 		if (canvas != null) {
 			canvas.drawColor(Color.WHITE);
-			synchronized (objectsToDraw) {
-				for (DrawableObject drawableObject : objectsToDraw) {
+			synchronized (mObjectsToDraw) {
+				for (DrawableObject drawableObject : mObjectsToDraw) {
 					drawableObject.draw(canvas);
 				}
 			}
 			
-			if (templine != null) {
-				templine.draw(canvas);
+			if (mTempline != null) {
+				mTempline.draw(canvas);
 			}
 		}
 	}
 
 	public void stopUIThread() {
-		uiThread.setRunning(false);
+		mUIThread.setRunning(false);
 	}
 
 	private void setPaintProperties() {
 		mPaint = new Paint();
-		mPaint.setAntiAlias(true);
 		mPaint.setAntiAlias(true);
 		mPaint.setDither(true);
 		mPaint.setColor(Color.RED);
@@ -98,7 +97,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-		oldObjectedToDraw = objectsToDraw;
+		mOldObjectedToDraw = mObjectsToDraw;
 	}
 
 	@Override
@@ -106,33 +105,33 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		float x = event.getX();
 		float y = event.getY();
 		
-		Log.d("TEST", "onTouchEvent :" + objectsToDraw.size());
+		Log.d("TEST", "onTouchEvent :" + mObjectsToDraw.size());
 		
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			switch (mMode) {
 			case Constants.SELECT:
-				drawableObject = getSelectedObject();
-				if(drawableObject == null) {
+				mDrawableObject = getSelectedObject();
+				if(mDrawableObject == null) {
 					Toast.makeText(getContext(), "NO OBJECT SELECTED", Toast.LENGTH_SHORT).show();
 				}
 				break;
 				
 			case Constants.FREE_DRAWING:
 				movePathTo(x, y);
-				if(drawableObject == null) {
-					drawableObject = new FreeDrawing(mPath, mPaint);
+				if(mDrawableObject == null) {
+					mDrawableObject = new FreeDrawing(mPath, mPaint);
 				}
 				
 				break;
 				
 			case Constants.LINE_DRAWING:
-				if(drawableObject == null) {
+				if(mDrawableObject == null) {
 					movePathTo(x, y);
-					drawableObject = new LineDrawing(mPath, mPaint);
-					templine = new TempLine(mPaint);
-					drawableObject.addControlPoint(x, y);
-					templine.setStartPoint(x, y);
+					mDrawableObject = new LineDrawing(mPath, mPaint);
+					mTempline = new TempLine(mPaint);
+					mDrawableObject.addControlPoint(x, y);
+					mTempline.setStartPoint(x, y);
 				}
 				
 //				Log.d("TEST", "ACTION_DOWN: (" + x + "," + y + ")");
@@ -140,12 +139,12 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				
 			case Constants.RECT_DRAWING:
 				movePathTo(x, y);
-				if(drawableObject == null) {
-					drawableObject = new RectDrawing(mPath, mPaint);
+				if(mDrawableObject == null) {
+					mDrawableObject = new RectDrawing(mPath, mPaint);
 				}
 				break;
 			}
-			addObjectToDraw(drawableObject);
+			addObjectToDraw(mDrawableObject);
 			break;
 
 		case MotionEvent.ACTION_MOVE:
@@ -163,8 +162,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				break;
 				
 			case Constants.LINE_DRAWING:
-				templine.setEndPoint(x, y);
-				templine.setShouldDrawLine(true);
+				mTempline.setEndPoint(x, y);
+				mTempline.setShouldDrawLine(true);
 				
 //				Log.d("TEST", "ACTION_MOVE: (" + x + "," + y + ")");
 				break;
@@ -175,18 +174,18 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			switch (mMode) {
 			case Constants.FREE_DRAWING:
 				mPath.moveTo(x, y);
-				drawableObject = null;
+				mDrawableObject = null;
 				break;
 				
 			case Constants.LINE_DRAWING:
-				drawableObject.addControlPoint(x, y);
+				mDrawableObject.addControlPoint(x, y);
 				
 //				Log.d("TEST", "ACTION_UP: (" + x + "," + y + ")");
 				
-				templine.setShouldDrawLine(false);
+				mTempline.setShouldDrawLine(false);
 //				templine.resetLine();
 //				drawableObject = null;
-				templine.setStartPoint(x, y);
+				mTempline.setStartPoint(x, y);
 				break;
 			}
 			break;
@@ -196,8 +195,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private void addObjectToDraw(DrawableObject drawableObject) {
 		if (drawableObject != null) {
-			synchronized (objectsToDraw) {
-				objectsToDraw.add(drawableObject);
+			synchronized (mObjectsToDraw) {
+				mObjectsToDraw.add(drawableObject);
 			}
 		}
 	}
@@ -215,24 +214,24 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		uiThread = new UIThread(this);
-		uiThread.setRunning(true);
-		uiThread.start();
+		mUIThread = new UIThread(this);
+		mUIThread.setRunning(true);
+		mUIThread.start();
 	}
 
 	public void restoreOldPath() {
-		objectsToDraw = oldObjectedToDraw;
+		mObjectsToDraw = mOldObjectedToDraw;
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		uiThread.setRunning(false);
+		mUIThread.setRunning(false);
 	}
 
 	public RectF getDirtyRect() {
-		if(dirtyRect == null) {
-			dirtyRect = new RectF();
+		if(mDirtyRect == null) {
+			mDirtyRect = new RectF();
 		}
-		return dirtyRect ;
+		return mDirtyRect ;
 	}
 }

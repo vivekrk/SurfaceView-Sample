@@ -12,24 +12,24 @@ import android.widget.Toast;
 
 public class SurfaceViewSampleActivity extends Activity implements OnCheckedChangeListener {
 	/** Called when the activity is first created. */
-	private CanvasView view;
+	private CanvasView mView;
 	private static final int CLEAR = 100;
 	
-	private FrameLayout surfaceViewFrame;
+	private FrameLayout mSurfaceViewFrame;
 
-	private RadioGroup mode;
+	private RadioGroup mMode;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		mode = (RadioGroup) findViewById(R.id.drawingMode);
-		mode.setOnCheckedChangeListener(this);
+		mMode = (RadioGroup) findViewById(R.id.drawingMode);
+		mMode.setOnCheckedChangeListener(this);
 
-		surfaceViewFrame = (FrameLayout) findViewById(R.id.surfaceviewFrame);
-		view = new CanvasView(this);
-		surfaceViewFrame.addView(view, 0);
+		mSurfaceViewFrame = (FrameLayout) findViewById(R.id.surfaceviewFrame);
+		mView = new CanvasView(this);
+		mSurfaceViewFrame.addView(mView, 0);
 
 	}
 
@@ -43,7 +43,7 @@ public class SurfaceViewSampleActivity extends Activity implements OnCheckedChan
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case CLEAR:
-			view.clearCanvas();
+			mView.clearCanvas();
 			break;
 		}
 		return true;
@@ -59,20 +59,20 @@ public class SurfaceViewSampleActivity extends Activity implements OnCheckedChan
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		switch (checkedId) {
 		case R.id.free_drawing:
-			view.setDrawingMode(Constants.FREE_DRAWING);
+			mView.setDrawingMode(Constants.FREE_DRAWING);
 			break;
 
 		case R.id.line_drawing:
-			view.setDrawingMode(Constants.LINE_DRAWING);
+			mView.setDrawingMode(Constants.LINE_DRAWING);
 			break;
 
 		case R.id.rectangle:
-			view.setDrawingMode(Constants.RECT_DRAWING);
+			mView.setDrawingMode(Constants.RECT_DRAWING);
 			Toast.makeText(getApplicationContext(), "Not implemented", Toast.LENGTH_SHORT).show();
 			break;
 			
 		case R.id.select:
-			view.setDrawingMode(Constants.SELECT);
+			mView.setDrawingMode(Constants.SELECT);
 			break;
 
 		default:

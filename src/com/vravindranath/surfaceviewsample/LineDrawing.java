@@ -10,11 +10,11 @@ import android.graphics.PointF;
 public class LineDrawing extends DrawableObject {
 
 	private static final float CONTROL_POINT_RADIUS = 8;
-	private ArrayList<PointF> controlPoints;
+	private ArrayList<PointF> mControlPoints;
 	private Path mPath;
 	private Paint mPaint;
 	
-	private boolean isSelected = true;
+	private boolean mIsSelected = false;
 	
 	public void setSelected(boolean isSelected) {
 		isSelected = true;
@@ -24,28 +24,28 @@ public class LineDrawing extends DrawableObject {
 		mPath = path;
 		mPaint = paint;
 		
-		controlPoints = new ArrayList<PointF>();
+		mControlPoints = new ArrayList<PointF>();
 	}
 	
 	@Override
 	public void draw(Canvas canvas) {
 		canvas.drawPath(mPath, mPaint);
-		if (isSelected) {
+		if (mIsSelected) {
 			drawSelection(canvas);
 		}
 	}
 	
 	public void removeLastPoint() {
-		synchronized (controlPoints) {
-			controlPoints.remove(controlPoints.size() - 1);
+		synchronized (mControlPoints) {
+			mControlPoints.remove(mControlPoints.size() - 1);
 		}
 	}
 	
 	@Override
 	public void addControlPoint(float x, float y) {
 		super.addControlPoint(x, y);
-		synchronized (controlPoints) {
-			controlPoints.add(new PointF(x, y));
+		synchronized (mControlPoints) {
+			mControlPoints.add(new PointF(x, y));
 		}
 		mPath.lineTo(x, y);
 	}
@@ -54,8 +54,8 @@ public class LineDrawing extends DrawableObject {
 	
 	@Override
 	public void drawSelection(Canvas canvas) {
-		synchronized (controlPoints) {
-			for (PointF controlPoint : controlPoints) {
+		synchronized (mControlPoints) {
+			for (PointF controlPoint : mControlPoints) {
 				canvas.drawCircle(controlPoint.x, controlPoint.y,
 						CONTROL_POINT_RADIUS, mPaint);
 			}

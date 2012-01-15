@@ -5,34 +5,34 @@ import android.view.SurfaceHolder;
 
 public class UIThread extends Thread {
 
-    private static boolean toRun = false;
-    private CanvasView canvasView;
-    private SurfaceHolder surfaceHolder;
+    private static boolean mToRun = false;
+    private CanvasView mCanvasView;
+    private SurfaceHolder mSurfaceHolder;
 	
 	public UIThread(CanvasView canvasView) {
-		this.canvasView = canvasView;
-		surfaceHolder = canvasView.getHolder();
+		this.mCanvasView = canvasView;
+		mSurfaceHolder = canvasView.getHolder();
 	}
 	
 	public boolean isThreadRunning() {
-		return toRun;
+		return mToRun;
 	}
 
 	public void setRunning(boolean run) {
-		toRun = run;
+		mToRun = run;
 	}
 	
 	@Override
 	public void run() {
 		Canvas c;
-	    while (toRun) {
+	    while (mToRun) {
 	            c = null;
 	            try {
-	                c = surfaceHolder.lockCanvas(null);
-	                canvasView.onDraw(c);
+	                c = mSurfaceHolder.lockCanvas(null);
+	                mCanvasView.onDraw(c);
 	            } finally {
 	                if (c != null) {
-	                    surfaceHolder.unlockCanvasAndPost(c);
+	                    mSurfaceHolder.unlockCanvasAndPost(c);
 	                }
 	            }
 	    }

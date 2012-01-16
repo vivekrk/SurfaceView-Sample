@@ -10,6 +10,10 @@ public abstract class DrawableObject {
 		
 	}
 	
+	public void setSelected(boolean isSelected) {
+		
+	}
+	
 	abstract public void drawSelection(Canvas canvas);
 	
 	public void removeLastPoint() {

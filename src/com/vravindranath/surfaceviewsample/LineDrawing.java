@@ -50,7 +50,9 @@ public class LineDrawing extends DrawableObject {
 		mPath.lineTo(x, y);
 	}
 	
-	
+	public boolean isPointInObject(float x, float y) {
+		return false;
+	}
 	
 	@Override
 	public void drawSelection(Canvas canvas) {

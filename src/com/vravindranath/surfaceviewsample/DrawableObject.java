@@ -19,4 +19,8 @@ public abstract class DrawableObject {
 	public void removeLastPoint() {
 		
 	}
+
+	public boolean isPointInObject(float x, float y) {
+		return false;
+	}
 }

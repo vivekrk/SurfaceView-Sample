@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -16,7 +15,7 @@ import android.widget.Toast;
 
 public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
-	private static final float STROKE_WIDTH = 8;
+	private static final float STROKE_WIDTH = 20;
 
 	private UIThread mUIThread;
 
@@ -32,8 +31,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private float TOUCH_TOLERANCE = 8;
 	
 	private TempLine mTempline;
-
-	private RectF mDirtyRect;
 
 	private int mMode = Constants.FREE_DRAWING;
 	
@@ -105,15 +102,19 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		float x = event.getX();
 		float y = event.getY();
 		
-		Log.d("TEST", "onTouchEvent :" + mObjectsToDraw.size());
-		
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			switch (mMode) {
 			case Constants.SELECT:
-				mDrawableObject = getSelectedObject();
+				mDrawableObject = null;
+				mDrawableObject = getObjectAtPoint(x, y);
+				
 				if(mDrawableObject == null) {
 					Toast.makeText(getContext(), "NO OBJECT SELECTED", Toast.LENGTH_SHORT).show();
+					deselectAllObjects();
+				} else {
+					Toast.makeText(getContext(), "OBJECT FOUND", Toast.LENGTH_SHORT).show();
+					mDrawableObject.setSelected(true);
 				}
 				break;
 				
@@ -193,6 +194,12 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		return true;
 	}
 
+	private void deselectAllObjects() {
+		for (DrawableObject drawbleObject : mObjectsToDraw) {
+			drawbleObject.setSelected(false);
+		}
+	}
+
 	private void addObjectToDraw(DrawableObject drawableObject) {
 		if (drawableObject != null) {
 			synchronized (mObjectsToDraw) {
@@ -207,8 +214,12 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		mY = y;
 	}
 
-	private DrawableObject getSelectedObject() {
-		// TODO Auto-generated method stub
+	private DrawableObject getObjectAtPoint(float x, float y) {
+		for (DrawableObject drawableObject : mObjectsToDraw) {
+			if (drawableObject.isPointInObject(x, y)) {
+				return drawableObject;
+			}
+		}
 		return null;
 	}
 
@@ -228,10 +239,4 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		mUIThread.setRunning(false);
 	}
 
-	public RectF getDirtyRect() {
-		if(mDirtyRect == null) {
-			mDirtyRect = new RectF();
-		}
-		return mDirtyRect ;
-	}
 }

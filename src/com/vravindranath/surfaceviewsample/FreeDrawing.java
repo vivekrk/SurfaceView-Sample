@@ -59,7 +59,6 @@ public class FreeDrawing extends DrawableObject {
 	
 	@Override
 	public void drawSelection(Canvas canvas) {
-		Log.d("TEST", "Drawing selection");
 		canvas.drawPath(mPath, mSelectionPaint);
 	}
 

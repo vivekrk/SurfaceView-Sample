@@ -51,7 +51,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			mObjectsToDraw.clear();
 		}
 		mDrawableObject = null;
-		Log.d("TEST", "clearCanvas :" + mObjectsToDraw.size());
 	}
 	
 	public void setDrawingMode(int drawingMode) {
@@ -110,10 +109,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				mDrawableObject = getObjectAtPoint(x, y);
 				
 				if(mDrawableObject == null) {
-					Toast.makeText(getContext(), "NO OBJECT SELECTED", Toast.LENGTH_SHORT).show();
 					deselectAllObjects();
 				} else {
-					Toast.makeText(getContext(), "OBJECT FOUND", Toast.LENGTH_SHORT).show();
 					mDrawableObject.setSelected(true);
 				}
 				break;
@@ -134,8 +131,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 					mDrawableObject.addControlPoint(x, y);
 					mTempline.setStartPoint(x, y);
 				}
-				
-//				Log.d("TEST", "ACTION_DOWN: (" + x + "," + y + ")");
 				break;
 				
 			case Constants.RECT_DRAWING:
@@ -165,8 +160,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			case Constants.LINE_DRAWING:
 				mTempline.setEndPoint(x, y);
 				mTempline.setShouldDrawLine(true);
-				
-//				Log.d("TEST", "ACTION_MOVE: (" + x + "," + y + ")");
 				break;
 			}
 			break;
@@ -180,8 +173,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				
 			case Constants.LINE_DRAWING:
 				mDrawableObject.addControlPoint(x, y);
-				
-//				Log.d("TEST", "ACTION_UP: (" + x + "," + y + ")");
 				
 				mTempline.setShouldDrawLine(false);
 //				templine.resetLine();
